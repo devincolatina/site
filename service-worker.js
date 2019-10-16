@@ -3,13 +3,24 @@
 // Variables --------------------------------------------------------------------------------------
 
 const VERSION           = 2;
+const IMAGE_VERSION     = 1;
 const STATIC_CACHE_NAME = 'staticfiles_' + VERSION;
+const IMAGE_CACHE_NAME  = 'images_' + IMAGE_VERSION;
+const SCRIPT_CACHE_NAME = 'script_' + VERSION;
+const STYLE_CACHE_NAME  = 'style_' + VERSION;
+const FONT_CACHE_NAME   = 'font_' + VERSION;
+const PAGE_CACHE_NAME   = 'pages_' + VERSION;
 
+const BLACKLIST     = ['/admin.html'];
 const OFFLINE_PAGE  = '/offline.html';
 const OFFLINE_IMAGE = '/images/offline.png';
 
 const CACHE_LIST = [
-    STATIC_CACHE_NAME
+    STATIC_CACHE_NAME,
+    IMAGE_CACHE_NAME,
+    SCRIPT_CACHE_NAME,
+    STYLE_CACHE_NAME,
+    PAGE_CACHE_NAME,
 ];
 
 // Base functions ---------------------------------------------------------------------------------
