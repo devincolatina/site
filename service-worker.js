@@ -2,8 +2,8 @@
 
 // Variables --------------------------------------------------------------------------------------
 
-const VERSION           = 4;
-const IMAGE_VERSION     = 3;
+const VERSION           = 1;
+const IMAGE_VERSION     = 1;
 const STATIC_CACHE_NAME = 'staticfiles_' + VERSION;
 const IMAGE_CACHE_NAME  = 'images_' + IMAGE_VERSION;
 const SCRIPT_CACHE_NAME = 'script_' + VERSION;
