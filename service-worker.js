@@ -186,5 +186,52 @@ self.addEventListener('fetch', event => {
         return;
     }
 
+    // Request other file
+    if (fetchPermited) {
+
+        event.respondWith(
+
+            // Look for a cached copy of the file
+            caches.match(request).then( responseFromCache => {
+
+                if (responseFromCache)
+                    return responseFromCache;
+
+                // Otherwise fetch the file from the network
+                return fetch(request).then( responseFromFetch => {
+
+                    // Put a copy in the cache
+                    const copy = responseFromFetch.clone();
+
+                    if(request.destination == 'script') {
+
+                        event.waitUntil(
+                            saveInCache(request, SCRIPT_CACHE_NAME, copy)
+                        );
+                    }
+
+                    if(request.destination == 'style') {
+
+                        event.waitUntil(
+                            saveInCache(request, STYLE_CACHE_NAME, copy)
+                        );
+                    }
+
+                    if(request.destination == 'font') {
+
+                        event.waitUntil(
+                            saveInCache(request, FONT_CACHE_NAME, copy)
+                        );
+                    }
+
+                    return responseFromFetch;
+
+                }).catch( error => {
+
+                    console.log('ERROR FETCH: ', error, request);
+                });
+            })
+        );
+    }
     
 });
