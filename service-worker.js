@@ -1,13 +1,32 @@
 'use strict';
   
-addEventListener('install', function (event) {
-    console.log('INSTALL: The service worker is installing . . . ', event);
-});
+// Variables --------------------------------------------------------------------------------------
 
-addEventListener('activate', function (event) {
-    console.log('ACTIVATE - The service worker is activated.', event);
-});
+const VERSION           = 1;
+const STATIC_CACHE_NAME = 'staticfiles_' + VERSION;
 
-addEventListener('fetch', function (event) {
-    console.log('FETCH: The service worker is listening.', event);
+const OFFLINE_PAGE  = '/offline.html';
+const OFFLINE_IMAGE = '/images/offline.png';
+
+// Base functions ---------------------------------------------------------------------------------
+
+function loadPreCache() {
+
+    return caches.open(STATIC_CACHE_NAME).then( cache => {
+
+        return cache.addAll([
+            OFFLINE_PAGE,
+            OFFLINE_IMAGE
+        ]);
+    });
+}
+
+// Install ----------------------------------------------------------------------------------------
+
+self.addEventListener('install', event => {
+
+    self.skipWaiting();
+
+    event.waitUntil( loadPreCache() );
+
 });
