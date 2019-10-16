@@ -78,3 +78,60 @@ self.addEventListener('activate', activateEvent => {
 
     activateEvent.waitUntil( cleanCache() );
 });
+
+// Fetch ------------------------------------------------------------------------------------------
+
+self.addEventListener('fetch', event => {
+
+    const request = event.request;
+
+    let fetchPermited = true; 
+
+    BLACKLIST.map( tag => {
+        if(request.url.includes(tag))
+            fetchPermited = false;
+    });
+
+    // Request an HTML file
+    if (request.method === 'GET' &&
+        request.destination === 'document' &&
+        request.headers.get('Accept').includes('text/html')) {
+
+        event.respondWith(
+
+            // Fetch that page from the network
+            fetch(request).then( responseFromFetch => {
+
+                console.log('Fetch HTML', responseFromFetch);
+
+                // Put a copy in the cache
+                const copy = responseFromFetch.clone();
+
+                event.waitUntil(
+                    saveInCache(request, PAGE_CACHE_NAME, copy)
+                );
+
+                return responseFromFetch;
+
+            })
+            .catch( error => {
+
+                return caches.match(request).then( responseFromCache => {
+
+                    if(fetchPermited && responseFromCache) {
+                        console.log('HTML - Response from cache', responseFromCache);
+                        return responseFromCache;
+                    }
+
+                    console.log('HTML - Show Offline page');
+
+                    // Otherwise show the fallback page
+                    return caches.match(OFFLINE_PAGE);
+                });
+            })
+        );
+
+        return;
+    }
+    
+});
