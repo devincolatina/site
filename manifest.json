@@ -1,0 +1,15 @@
+{
+    "name": "Dev Colatina Meetup",
+    "short_name": "DevCol",
+    "lang": "en-US",
+    "start_url": "/",
+    "display": "fullscreen",
+    "theme_color": "#98ead3",
+    "icons": [
+      {
+        "src": "/images/icon.png",
+        "sizes": "300x300",
+        "type": "image/png"
+      }
+    ]
+  }
