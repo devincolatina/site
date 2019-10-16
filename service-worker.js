@@ -53,6 +53,15 @@ function cleanCache() {
     })
 }
 
+function saveInCache(request, cacheName, copy) {
+
+    return caches.open(cacheName).then( pagesCache => {
+        return pagesCache.put(request, copy);
+    }).catch( error => {
+        console.log('Error: ', error);
+    })
+}
+
 // Install ----------------------------------------------------------------------------------------
 
 self.addEventListener('install', event => {
