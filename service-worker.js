@@ -9,5 +9,5 @@ addEventListener('activate', function (event) {
 });
 
 addEventListener('fetch', function (event) {
-    //console.log('FETCH: The service worker is listening.', event);
+    console.log('FETCH: The service worker is listening.', event);
 });
