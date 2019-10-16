@@ -133,5 +133,58 @@ self.addEventListener('fetch', event => {
 
         return;
     }
+
+    // Request an image
+    if (fetchPermited && request.headers.get('Accept').includes('image')) {
+
+        event.respondWith(
+
+            // Look for a cached version of the image
+            caches.match(request).then( responseFromCache => {
+
+                if (responseFromCache) {
+
+                    // Fetch a fresh version from the network and save it in cache
+                    event.waitUntil(
+                        fetch(request).then( responseFromFetch => {
+                            caches.open(IMAGE_CACHE_NAME).then( theCache => {
+                                console.log('Save fetch image in the cacche', responseFromFetch);
+                                return theCache.put(request, responseFromFetch);
+                            }).catch( error => {
+                                console.log('Error cache: ', error);
+                            });
+                        }).catch( error => {
+                            console.log('Error fetch: ', error);
+                        })
+                    );
+
+                    return responseFromCache;
+                }
+
+                // Otherwise fetch the image from the network
+                return fetch(request).then( responseFromFetch => {
+
+                    // Put a copy in the cache
+                    const copy = responseFromFetch.clone();
+
+                    event.waitUntil(
+                        saveInCache(request, IMAGE_CACHE_NAME, copy)
+                    );
+
+                    return responseFromFetch;
+
+                }).catch( error => {
+
+                    // Otherwise show a fallback image
+                    return caches.match(OFFLINE_IMAGE);
+                });
+
+            })
+
+        );
+
+        return;
+    }
+
     
 });
